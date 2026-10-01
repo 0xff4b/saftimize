@@ -13,7 +13,7 @@ flowchart LR
     end
 
     subgraph Orchestration
-        O[Orchestrator<br/>daily schedule, retries, backfills]
+        O[Orchestrator<br/>daily schedule, retries, safe reruns]
     end
 
     subgraph Local["Local (Docker Compose)"]
@@ -64,7 +64,7 @@ flowchart LR
 |---|---|---|
 | Load strategy | Incremental by date window with lookback | Data is append-mostly but values get revised |
 | Frequency | Daily | Day-ahead prices appear once per day |
-| Failure behaviour | Retry with backoff, then fail the run and alert, reruns are idempotent | Safe backfills |
+| Failure behaviour | Retry with backoff, then fail the run and alert, reruns are idempotent | Safe reruns |
 | Orchestrator | Open (Airflow or Dagster candidates) | Decide at start of midterm work |
 | Dashboard | Open (Looker Studio or custom web app) | Not graded directly, keep cheap |
 

@@ -15,7 +15,7 @@ Dates come from the module description. Repo submission is one week before each 
 - [ ] Ingestion module for ENTSO-E load, incremental with lookback
 - [ ] Ingestion module for ENTSO-E prices
 - [ ] Raw schema in PostgreSQL, loads are idempotent
-- [ ] Orchestrated daily DAG with retries and a backfill command
+- [ ] Orchestrated daily DAG with retries and a reruns
 - [ ] One justified transformation (clean, handle DST, join load and price)
 - [ ] Setup, run and verification steps in the README, `.env.example`
 - [ ] Architecture v0.2

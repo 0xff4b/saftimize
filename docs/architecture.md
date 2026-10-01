@@ -1,4 +1,4 @@
-# Architecture v0.1
+# Saftimize architecture v0.1
 
 Status: initial plan for the pitch. Expect changes at v0.2 (midterm) and the final version.
 

@@ -1,9 +1,11 @@
-# Swiss Energy Monitor
+![Saftimize — optimize your power usage](docs/saftimize_lander.png)
+
+# Saftimize — Optimize your energy usage
 
 Batch data pipeline for the HSLU Data Engineering module (DENG HS26).
 It collects Swiss electricity load and price data, stores it raw and curated, and serves it to a dashboard that shows when power is likely to get expensive.
 
-> Status: Milestone 1 (initial pitch). Nothing is implemented yet. This repo contains the plan only.
+> Status: Milestone 1 (initial pitch). The pipeline is not implemented yet; this repo contains the plan and an example environment file.
 
 ## Problem and user
 
@@ -11,7 +13,7 @@ My household wants to monitor its electricity usage and know in advance when cos
 
 - **End users:** me and my family
 - **Data product:** a curated, queryable table of hourly load and price per hour, plus a dashboard and later a simple price forecast
-- Details: [docs/dataset-and-use-case.md](docs/dataset-and-use-case.md)
+- Details: [docs/usecase.md](docs/usecase.md)
 
 ## Data source (current)
 
@@ -26,7 +28,7 @@ A Swiss weather source (Zug area) is planned as a secondary source to explain lo
 
 ## Architecture
 
-See [docs/architecture-v0.1.md](docs/architecture-v0.1.md).
+See [docs/architecture.md](docs/architecture.md).
 
 Short version:
 
@@ -35,6 +37,14 @@ Short version:
 3. Transformations clean and join load, price and weather
 4. Curated tables are served from PostgreSQL (midterm) and BigQuery (final)
 5. Everything runs in Docker Compose locally, cloud resources come from Terraform
+
+## Repository structure
+
+| Directory | Contents |
+|---|---|
+| `docs/` | Use case, architecture, backlog and other project documentation |
+| `src/` | Pipeline source code (planned); currently contains `.env.example` |
+| `data/` | Datasets and mock data for development and testing |
 
 ## Plan
 
@@ -48,7 +58,7 @@ See [docs/backlog.md](docs/backlog.md).
 
 ## Setup
 
-Not available yet. Will be added at the midterm, including `.env.example` and verification steps.
+Not available yet. Setup and verification steps will be added at the midterm; an example configuration is already in `src/.env.example`.
 
 ## Known limitations (so far)
 

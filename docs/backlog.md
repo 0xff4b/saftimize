@@ -1,4 +1,4 @@
-# Project plan and backlog
+# Saftimize project plan and backlog
 
 Dates come from the module description. Repo submission is one week before each oral defence.
 

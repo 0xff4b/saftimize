@@ -1,4 +1,4 @@
-# Dataset and use case
+# Saftimize dataset and use case
 
 ## Use case
 

@@ -1,6 +1,8 @@
 # Saftimize architecture v0.1
 
-Status: initial plan for the pitch. Expect changes at v0.2 (midterm) and the final version.
+Status: initial plan for the pitch, with ingestion now implemented. Expect changes at v0.2 (midterm) and the final version.
+
+Implemented ingestion uses a uv-managed Python package with one file per external source (`entsoe.py` for load/prices and `open_meteo.py` for weather). The CLI fetches daily UTC windows and writes unchanged response bytes to `raw.responses` in PostgreSQL. Request/body hashes make identical reruns no-ops and preserve changed source responses. A three-day default lookback catches recent revisions; explicit date bounds support backfills. HTTP retries are bounded. Compose currently supplies PostgreSQL only; orchestration, containerized ingestion, and transformations remain planned.
 
 ## Overview
 

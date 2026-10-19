@@ -1,2 +1,9 @@
 .DS_Store
 ~$*.pptx
+.venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+.pytest_cache/
+*.egg-info/

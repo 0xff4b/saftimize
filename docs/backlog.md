@@ -10,6 +10,8 @@ Dates come from the module description. Repo submission is one week before each 
 
 ## Midterm (repo due Thursday 22 Oct 2026, 15:30)
 
+Implementation progress: uv project/environment and source-specific ENTSO-E/Open-Meteo ingestion are present, with raw PostgreSQL schema, revision-preserving deduplication, explicit backfills and HTTP retries. Offline tests and a live Open-Meteo request pass. Live ENTSO-E verification still requires a token; PostgreSQL integration verification requires a running database (Docker was not running during implementation). The items below remain acceptance checks, not just code-presence checks.
+
 - [ ] Choose orchestrator and write the decision down
 - [ ] Docker Compose with Postgres, orchestrator and ingestion on one network
 - [ ] Ingestion module for ENTSO-E load, incremental with lookback

@@ -42,7 +42,7 @@ These risks are the reason the source fits the module: they force real cleaning,
 
 ## Source 2: weather (planned)
 
-A Swiss weather source for the Zug area, for example MeteoSwiss open data or Open-Meteo. Final choice is open and depends on API stability and history length. Used to explain load (heating, cooling) and price (wind, sun).
+Open-Meteo for the Zug area (47.1662, 8.5155), ingested as unchanged JSON. Recent dates use the Forecast API; older dates use the Historical Forecast API (2022 onward, depending on model availability). Hourly variables are temperature, relative humidity, precipitation, wind speed, and shortwave radiation, requested in UTC. The public non-commercial API requires no token. These are modelled weather values, not station observations; missing values can be null and are retained in raw storage. Used to explain load (heating, cooling) and price (wind, sun).
 
 ## Source 3: household meter (future)
 

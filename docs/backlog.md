@@ -10,17 +10,17 @@ Dates come from the module description. Repo submission is one week before each 
 
 ## Midterm (repo due Thursday 22 Oct 2026, 15:30)
 
-Implementation progress: uv project/environment and source-specific ENTSO-E/Open-Meteo ingestion are present, with raw PostgreSQL schema, revision-preserving deduplication, explicit backfills and HTTP retries. Offline tests and a live Open-Meteo request pass. Live ENTSO-E verification still requires a token; PostgreSQL integration verification requires a running database (Docker was not running during implementation). The items below remain acceptance checks, not just code-presence checks.
+Implementation progress: raw ingestion, hourly transformation, Dagster scheduling and container configuration are implemented. Live ENTSO-E requests and real raw writes to an isolated native PostgreSQL instance were verified. Docker image build and service startup are now verified. Transformation of real Docker PostgreSQL data produced 72 fully covered hours for 18–20 October, and reruns retained 72 rows. All 40 tests passed with PostgreSQL integration enabled. A fresh complete scheduled job remains an acceptance check. ENTSO-E regenerates response metadata, so repeated API calls can append raw documents even if measurements are unchanged; byte-identical response deduplication is tested separately.
 
-- [ ] Choose orchestrator and write the decision down
+- [x] Choose orchestrator and write the decision down (Dagster)
 - [ ] Docker Compose with Postgres, orchestrator and ingestion on one network
-- [ ] Ingestion module for ENTSO-E load, incremental with lookback
-- [ ] Ingestion module for ENTSO-E prices
-- [ ] Raw schema in PostgreSQL, loads are idempotent
+- [x] Ingestion module for ENTSO-E load, incremental with lookback
+- [x] Ingestion module for ENTSO-E prices
+- [x] Raw schema in PostgreSQL, identical response writes are idempotent
 - [ ] Orchestrated daily DAG with retries and a reruns
-- [ ] One justified transformation (clean, handle DST, join load and price)
-- [ ] Setup, run and verification steps in the README, `.env.example`
-- [ ] Architecture v0.2
+- [x] One justified transformation (clean, handle DST, join load and price)
+- [x] Setup, run and verification steps in the README, `.env.example` (full clean Compose run still pending)
+- [x] Architecture v0.2
 - [ ] Be able to explain every design choice (oral defence is questions only)
 
 ## Final (repo due Thursday 10 Dec 2026, 20:00)

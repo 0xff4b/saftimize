@@ -1,3 +1,15 @@
+x-pipeline: &pipeline
+  build: .
+  image: saftimize:local
+  environment: &pipeline-env
+    DATABASE_URL: "host=postgres dbname=saftimize user=saftimize"
+    PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ENTSOE_API_KEY: ${ENTSOE_API_KEY:?Set ENTSOE_API_KEY in .env}
+    DAGSTER_HOME: /var/dagster
+  depends_on:
+    postgres:
+      condition: service_healthy
+
 services:
   postgres:
     image: postgres:17
@@ -15,5 +27,51 @@ services:
       timeout: 5s
       retries: 10
 
+  dagster-init:
+    <<: *pipeline
+    command: ["sh", "-c", "cp /etc/saftimize/dagster.yaml /var/dagster/dagster.yaml && dagster instance migrate"]
+    volumes:
+      - dagster_data:/var/dagster
+
+  dagster-code:
+    <<: *pipeline
+    command: ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "ingest.definitions"]
+    volumes:
+      - dagster_data:/var/dagster
+    depends_on:
+      dagster-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "dagster", "api", "grpc-health-check", "-p", "4000"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+
+  dagster-webserver:
+    <<: *pipeline
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/app/workspace.yaml"]
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - dagster_data:/var/dagster
+    depends_on:
+      dagster-code:
+        condition: service_healthy
+
+  dagster-daemon:
+    <<: *pipeline
+    command: ["dagster-daemon", "run", "-w", "/app/workspace.yaml"]
+    volumes:
+      - dagster_data:/var/dagster
+    depends_on:
+      dagster-code:
+        condition: service_healthy
+
+  pipeline:
+    <<: *pipeline
+    profiles: ["manual"]
+    command: ["dagster", "job", "execute", "-m", "ingest.definitions", "-j", "daily_energy"]
+
 volumes:
   postgres_data:
+  dagster_data:

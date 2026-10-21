@@ -1,0 +1,9 @@
+*
+!pyproject.toml
+!uv.lock
+!src/
+!src/ingest/
+!src/ingest/*.py
+!docker/
+!docker/*.yaml
+!Dockerfile

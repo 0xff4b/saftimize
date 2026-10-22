@@ -123,6 +123,16 @@ Midterm repository deadline: **22 October 2026, 15:30 Europe/Zurich**. Submit th
 
 ### Verification
 
+The live Docker end-to-end test on **22 October 2026** completed successfully through Dagster: ENTSO-E load/prices → `raw.responses` → `curated.hourly_energy`. Run ID: `da2a0739-1019-4a21-97b2-e35047756730` (persisted status `SUCCESS`). The run fetched six new raw documents and replaced **72 hourly rows for 19–21 October UTC**. All 72 hours had both load and price values and 3,600 seconds of coverage per series. This was a manually triggered job, not evidence that the automatic schedule fired. The separate regression suite passed all 40 tests, including PostgreSQL integration, on 21 October.
+
+To repeat the end-to-end test using the running code server and persistent Dagster history:
+
+```powershell
+docker compose exec -T dagster-code dagster job execute -m ingest.definitions -j daily_energy
+```
+
+The default window is the previous three complete UTC days at execution time. View the run and step logs at http://localhost:3000. This command executes immediately rather than passing through the daemon's queue; avoid overlapping it with another run.
+
 ```powershell
 docker compose exec postgres psql -U saftimize -d saftimize -c "SELECT source, count(*), min(window_start), max(window_end) FROM raw.responses GROUP BY source;"
 docker compose exec postgres psql -U saftimize -d saftimize -c "SELECT source, window_start, fetched_at, octet_length(body) AS bytes FROM raw.responses ORDER BY fetched_at DESC LIMIT 10;"
@@ -136,7 +146,7 @@ $env:TEST_DATABASE_URL = 'postgresql://saftimize:YOUR_PASSWORD@localhost:5432/sa
 uv run pytest -q
 ```
 
-Create that separate test database first. `docker compose stop` stops services while retaining data. Do not run `docker compose down -v` unless you intend to delete the raw data and Dagster history.
+Create that separate test database first. Match the connection URL's port to `POSTGRES_PORT` in your local configuration; this installation uses 55432 because 5432 was already occupied. Prefer `127.0.0.1` if `localhost` resolves to an unavailable IPv6 listener. `docker compose stop` stops services while retaining data. Do not run `docker compose down -v` unless you intend to delete the raw data and Dagster history.
 
 ### Hourly transformation and rationale
 
@@ -167,4 +177,4 @@ Open-Meteo remains an optional raw-only ingestion command, not a dependency of t
 - Daily scheduling refreshes historical hours, not an intraday prediction product
 - No external alerting or automatic historical catch-up after a long outage; launch explicit date ranges
 - Local Dagster metadata uses SQLite and is not a production/high-availability deployment
-- Validation on 21 October: Docker image built and services started; the transformation successfully produced 72 fully covered hourly load/price rows for 18–20 October and reran without increasing the row count. All 40 tests passed with a separate PostgreSQL test database. A fresh full scheduled ingestion-to-transformation run still needs confirmation.
+- Automatic schedule firing and independent clean-clone reproduction have not been verified; the manually triggered Docker end-to-end job passed on 22 October (see Verification).

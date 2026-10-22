@@ -6,6 +6,10 @@ A uv-managed Python package separates ENTSO-E and Open-Meteo source modules. Dai
 
 Compared with v0.1: Dagster is selected, the local runtime is containerized using uv, and the midterm model is a single hourly joined table instead of speculative fact/dimension tables. Open-Meteo ingestion is available but not part of the scheduled midterm job. The final model can evolve without claiming the cloud path already exists.
 
+## Validation evidence
+
+On 22 October 2026, the manually triggered `daily_energy` job completed inside the Compose code-server container with persisted Dagster status `SUCCESS` (run `da2a0739-1019-4a21-97b2-e35047756730`). Six new live ENTSO-E documents flowed through raw storage into 72 hourly rows for 19–21 October UTC; every hour had complete load and price coverage. Docker image build and service startup were verified. Forty regression tests, including PostgreSQL integration, passed on 21 October. Automatic schedule firing and independent clean-clone reproduction are not yet verified. See the README for repeatable execution and SQL checks.
+
 ## Overview
 
 ```mermaid
@@ -22,7 +26,7 @@ flowchart LR
 
     subgraph Local["Local (Docker Compose)"]
         I[Ingestion service<br/>modular, one module per source]
-        PG[(PostgreSQL<br/>raw + staging + curated)]
+        PG[(PostgreSQL<br/>raw + curated)]
     end
 
     subgraph Cloud["Google Cloud (Terraform), final"]
@@ -39,8 +43,8 @@ flowchart LR
     I --> PG
     I -. planned .-> GCS
     GCS -. planned .-> BQ
-    PG --> D
-    BQ --> D
+    PG -. planned .-> D
+    BQ -. planned .-> D
 ```
 
 ## Layers
